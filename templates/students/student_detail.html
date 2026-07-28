@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ student.user.get_full_name }} - Profile{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: start;">
+    
+    <!-- Left Column: Quick Profile Info -->
+    <div>
+        <div class="card" style="text-align: center; padding: 32px 20px;">
+            <div class="user-avatar" style="width: 70px; height: 70px; font-size: 28px; margin: 0 auto 16px auto; box-shadow: var(--shadow-sm);">
+                {{ student.user.username|slice:":1"|upper }}
+            </div>
+            <h3 style="font-size: 18px; margin-bottom: 4px;">{{ student.user.get_full_name }}</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Roll: {{ student.roll_number }}</p>
+            
+            <div style="margin-bottom: 24px;">
+                {% if student.placement_status == 'placed' %}
+                    <span class="badge badge-success">Placed</span>
+                {% elif student.placement_status == 'shortlisted' %}
+                    <span class="badge badge-warning">Shortlisted</span>
+                {% else %}
+                    <span class="badge badge-danger">Unplaced</span>
+                {% endif %}
+            </div>
+            
+            <div style="text-align: left; display: flex; flex-direction: column; gap: 12px; font-size: 13px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                <div>
+                    <span style="color: var(--text-muted);">Email:</span>
+                    <span style="float: right; font-weight: 500;">{{ student.user.email }}</span>
+                </div>
+                <div>
+                    <span style="color: var(--text-muted);">Phone:</span>
+                    <span style="float: right; font-weight: 500;">{{ student.phone|default:"Not Provided" }}</span>
+                </div>
+                <div>
+                    <span style="color: var(--text-muted);">Course:</span>
+                    <span style="float: right; font-weight: 500;">{{ student.course }}</span>
+                </div>
+                <div>
+                    <span style="color: var(--text-muted);">Department:</span>
+                    <span style="float: right; font-weight: 500;">{{ student.department }}</span>
+                </div>
+                <div>
+                    <span style="color: var(--text-muted);">CGPA:</span>
+                    <span style="float: right; font-weight: 600; color: var(--primary);">{{ student.cgpa }}</span>
+                </div>
+            </div>
+            
+            {% if student.resume %}
+                <a href="{{ student.resume.url }}" target="_blank" class="btn btn-primary" style="width: 100%; margin-top: 20px; font-size: 13px;">
+                    <i class="fa-solid fa-file-pdf"></i> Download CV Resume
+                </a>
+            {% else %}
+                <div style="color: var(--danger); font-size: 12px; font-weight: 500; margin-top: 20px;">Resume not uploaded</div>
+            {% endif %}
+        </div>
+        
+        <!-- Action to Update Placement Status (Placement Officer / Admin only) -->
+        {% if user.role == 'officer' or user.role == 'admin' %}
+            <div class="card" style="padding: 20px;">
+                <h4 style="font-size: 14px; margin-bottom: 12px;">Manage Status</h4>
+                <form method="POST" action="{% url 'students:placement_status' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="student_pk" value="{{ student.pk }}">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <select name="status" class="form-control">
+                            <option value="unplaced" {% if student.placement_status == 'unplaced' %}selected{% endif %}>Unplaced</option>
+                            <option value="shortlisted" {% if student.placement_status == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                            <option value="placed" {% if student.placement_status == 'placed' %}selected{% endif %}>Placed</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width: 100%; font-size: 13px;">Update Status</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Right Column: Academic Details -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- Skills -->
+        <div class="card">
+            <h3 style="margin-bottom: 16px;">Technical Skills</h3>
+            {% if student.get_skills_list %}
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    {% for skill in student.get_skills_list %}
+                        <span class="badge badge-info" style="font-weight: 500;">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p style="color: var(--text-muted); font-size: 13px;">No skills added yet.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Education History -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin: 0;">Education History</h3>
+                {% if user.role == 'student' and user.student_profile == student %}
+                    <a href="{% url 'students:education' %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-plus"></i> Add</a>
+                {% endif %}
+            </div>
+            
+            {% if education_history %}
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    {% for edu in education_history %}
+                        <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+                            <div style="display: flex; justify-content: space-between;">
+                                <h4 style="font-size: 15px;">{{ edu.degree }}</h4>
+                                <span style="font-weight: 600; color: var(--primary);">Score: {{ edu.percentage_cgpa }}</span>
+                            </div>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Institution: {{ edu.institution }}</p>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Passing Year: {{ edu.passing_year }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p style="color: var(--text-muted); font-size: 13px;">No education entries added.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Certifications -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="margin: 0;">Certifications</h3>
+                {% if user.role == 'student' and user.student_profile == student %}
+                    <a href="{% url 'students:certificates' %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-plus"></i> Add</a>
+                {% endif %}
+            </div>
+            
+            {% if certificates %}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    {% for cert in certificates %}
+                        <div style="padding: 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h4 style="font-size: 14px;">{{ cert.name }}</h4>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">{{ cert.issuing_organization }}</p>
+                                <p style="font-size: 11px; color: var(--text-muted);">Issued: {{ cert.issue_date|date:"M Y" }}</p>
+                            </div>
+                            
+                            <div style="margin-top: 12px;">
+                                {% if cert.credential_url %}
+                                    <a href="{{ cert.credential_url }}" target="_blank" style="font-size: 12px; font-weight: 500; margin-right: 8px;"><i class="fa-solid fa-link"></i> Link</a>
+                                {% endif %}
+                                {% if cert.file %}
+                                    <a href="{{ cert.file.url }}" target="_blank" style="font-size: 12px; font-weight: 500; color: var(--secondary);"><i class="fa-solid fa-file-pdf"></i> Certificate PDF</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p style="color: var(--text-muted); font-size: 13px;">No certifications added.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

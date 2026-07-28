@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Shortlisted Applications - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Shortlisted Job Applications</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Congratulations! These are the jobs where your application has been shortlisted.</p>
+    
+    {% if applications %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>Package</th>
+                        <th>Applied Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                        <tr>
+                            <td><strong>{{ app.job.title }}</strong></td>
+                            <td>{{ app.job.company.name }}</td>
+                            <td>{{ app.job.salary_package }}</td>
+                            <td>{{ app.applied_at|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{% url 'students:interview_schedule' %}" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-calendar"></i> Check Interview</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">You have no shortlisted job applications currently.</p>
+    {% endif %}
+</div>
+{% endblock %}

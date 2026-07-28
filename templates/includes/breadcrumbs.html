@@ -1,0 +1,11 @@
+<nav aria-label="breadcrumb" style="margin-bottom: 20px;">
+    <ol style="list-style: none; display: flex; gap: 8px; font-size: 13px; color: var(--text-muted); font-weight: 500;">
+        <li><a href="{% url 'dashboard:home' %}" style="color: var(--text-muted);"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li style="color: #cbd5e1;">/</li>
+        <li style="color: var(--text-main); font-weight: 600;">{{ request.resolver_match.app_name|title }}</li>
+        {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'index' %}
+            <li style="color: #cbd5e1;">/</li>
+            <li style="color: var(--primary); font-weight: 600;">{{ request.resolver_match.url_name|title }}</li>
+        {% endif %}
+    </ol>
+</nav>

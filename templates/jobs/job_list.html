@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Jobs - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+        <div>
+            <h2>Job Opportunities</h2>
+            <p style="color: var(--text-muted); font-size: 13px;">Discover and apply to active job listings posted by partner companies.</p>
+        </div>
+        
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; width: 100%; max-width: 500px;">
+            <!-- Eligible filter for student -->
+            {% if user.role == 'student' %}
+                <a href="?eligible=true" class="btn btn-secondary" style="padding: 10px 14px; font-size: 13px;">
+                    <i class="fa-solid fa-filter"></i> Show Eligible Only
+                </a>
+            {% endif %}
+            
+            <!-- Search form -->
+            <form method="GET" style="display: flex; gap: 8px; flex-grow: 1;">
+                <input type="text" name="q" class="form-control" placeholder="Search title, company, skills..." value="{{ request.GET.q }}">
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+    </div>
+    
+    {% if jobs %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+            {% for job in jobs %}
+                <div class="card" style="margin: 0; padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                            <div>
+                                <h3 style="font-size: 18px; margin-bottom: 4px;">{{ job.title }}</h3>
+                                <p style="color: var(--text-muted); font-size: 13px; font-weight: 500;">{{ job.company.name }}</p>
+                            </div>
+                            <span class="badge badge-success">{{ job.salary_package }}</span>
+                        </div>
+                        
+                        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                            <span class="badge badge-info">{{ job.get_job_type_display }}</span>
+                            <span class="badge badge-warning">Min CGPA: {{ job.eligibility_criteria }}</span>
+                        </div>
+                        
+                        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+                            <p style="margin-bottom: 6px;"><i class="fa-solid fa-location-dot" style="color: var(--primary); margin-right: 6px;"></i> {{ job.location }}</p>
+                            <p><i class="fa-regular fa-clock" style="color: var(--primary); margin-right: 6px;"></i> Apply by: {{ job.application_deadline|date:"M d, Y" }}</p>
+                        </div>
+                        
+                        {% if job.skills_required %}
+                            <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;">
+                                {% for skill in job.get_skills_list %}
+                                    <span style="background-color: #f1f5f9; color: #475569; font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 500;">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <a href="{% url 'jobs:job_detail' pk=job.pk %}" class="btn btn-primary" style="width: 100%; font-size: 13px;">View Job details</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No job postings registered match the parameters.</p>
+    {% endif %}
+</div>
+{% endblock %}

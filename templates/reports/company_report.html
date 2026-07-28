@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Report - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
+        <h2>Company Partners Report</h2>
+        <a href="?export=csv" class="btn btn-primary"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+    </div>
+    
+    {% if companies %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Industry</th>
+                        <th>Website</th>
+                        <th>Email Contact</th>
+                        <th>Jobs Posted</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in companies %}
+                        <tr>
+                            <td><strong>{{ c.name }}</strong></td>
+                            <td><span class="badge badge-info">{{ c.industry }}</span></td>
+                            <td><a href="{{ c.website }}" target="_blank">{{ c.website }}</a></td>
+                            <td>{{ c.contact_email }}</td>
+                            <td><strong>{{ c.job_count }}</strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No companies registered.</p>
+    {% endif %}
+</div>
+{% endblock %}

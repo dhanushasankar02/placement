@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ notification.title }} - Notification{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 40px auto; width: 100%;">
+    <div class="card" style="padding: 32px; box-shadow: var(--shadow-md);">
+        <i class="fa-regular fa-bell" style="font-size: 40px; color: var(--primary); margin-bottom: 16px;"></i>
+        <h2>{{ notification.title }}</h2>
+        <p style="color: var(--text-muted); font-size: 11px; margin-top: 4px; margin-bottom: 20px;">{{ notification.created_at|date:"M d, Y - h:i A" }}</p>
+        
+        <p style="font-size: 14px; line-height: 1.6; color: var(--text-main); margin-bottom: 24px;">
+            {{ notification.message }}
+        </p>
+        
+        <div style="display: flex; gap: 12px;">
+            <a href="{% url 'notifications:notification_list' %}" class="btn btn-secondary" style="flex: 1; text-align: center;">Back to List</a>
+            <a href="{% url 'dashboard:home' %}" class="btn btn-primary" style="flex: 1; text-align: center;">Go to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

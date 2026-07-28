@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Placement Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 520px; margin: 30px auto; width: 100%;">
+    <!-- Tabs to switch registration roles -->
+    <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <a href="?role=student" class="btn {% if role == 'student' %}btn-primary{% else %}btn-secondary{% endif %}" style="flex: 1; padding: 12px; font-weight: 600;">
+            <i class="fa-solid fa-user-graduate"></i> Register as Student
+        </a>
+        <a href="?role=company" class="btn {% if role == 'company' %}btn-primary{% else %}btn-secondary{% endif %}" style="flex: 1; padding: 12px; font-weight: 600;">
+            <i class="fa-solid fa-building"></i> Register as Recruiter
+        </a>
+    </div>
+
+    <div class="card" style="padding: 32px; box-shadow: var(--shadow-lg);">
+        <div style="text-align: center; margin-bottom: 24px;">
+            <h2>Create Account</h2>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Sign up as a {{ role|title }} to access the portal.</p>
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <span style="color: var(--danger); font-size: 12px; font-weight: 500;">{{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;">Register Account</button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-muted);">
+            Already have an account? <a href="{% url 'accounts:login' %}" style="font-weight: 600;">Sign in</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

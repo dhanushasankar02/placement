@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Jobs Report - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
+        <h2>Job Openings Activity</h2>
+        <a href="?export=csv" class="btn btn-primary"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+    </div>
+    
+    {% if jobs %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>Location</th>
+                        <th>Package</th>
+                        <th>Criteria CGPA</th>
+                        <th>Applicants</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for j in jobs %}
+                        <tr>
+                            <td><strong>{{ j.title }}</strong></td>
+                            <td>{{ j.company.name }}</td>
+                            <td>{{ j.location }}</td>
+                            <td style="font-weight: 600; color: var(--success);">{{ j.salary_package }}</td>
+                            <td>{{ j.eligibility_criteria }}</td>
+                            <td><strong>{{ j.app_count }}</strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No job listings found.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,233 @@
+<aside id="sidebar">
+    <div class="sidebar-brand">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span>PlacePortal</span>
+    </div>
+    
+    <ul class="sidebar-menu">
+        {% if user.is_authenticated %}
+            <!-- Common Authorized Link -->
+            <li class="sidebar-item">
+                <a href="{% url 'dashboard:home' %}">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            
+            {% if user.role == 'student' %}
+                <!-- STUDENT MENU -->
+                <li class="sidebar-menu-title">Student Hub</li>
+                <li class="sidebar-item">
+                    <a href="{% url 'accounts:profile' %}">
+                        <i class="fa-solid fa-user"></i>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'students:resume_upload' %}">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>Upload Resume</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'students:education' %}">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>My Education</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'students:certificates' %}">
+                        <i class="fa-solid fa-certificate"></i>
+                        <span>My Certificates</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'students:skills' %}">
+                        <i class="fa-solid fa-brain"></i>
+                        <span>My Skills</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'jobs:job_list' %}">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span>Search Jobs</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'students:applied_jobs' %}">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Applied Jobs</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'students:shortlisted_jobs' %}">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Shortlisted</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'students:interview_schedule' %}">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>Interviews</span>
+                    </a>
+                </li>
+                
+            {% elif user.role == 'company' %}
+                <!-- COMPANY RECRUITER MENU -->
+                <li class="sidebar-menu-title">Recruiter Hub</li>
+                <li class="sidebar-item">
+                    <a href="{% url 'companies:company_profile' %}">
+                        <i class="fa-solid fa-building"></i>
+                        <span>Company Profile</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'jobs:job_create' %}">
+                        <i class="fa-solid fa-circle-plus"></i>
+                        <span>Post a Job</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'companies:company_jobs' %}">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Posted Jobs</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'companies:company_students' %}">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Job Applications</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'interviews:interview_list' %}">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span>Scheduled Rounds</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'interviews:interview_calendar' %}">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>Calendar View</span>
+                    </a>
+                </li>
+                
+            {% elif user.role == 'officer' or user.role == 'admin' %}
+                <!-- ADMIN / PLACEMENT OFFICER MENU -->
+                <li class="sidebar-menu-title">Management Hub</li>
+                <li class="sidebar-item">
+                    <a href="{% url 'students:student_list' %}">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>All Students</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'companies:company_list' %}">
+                        <i class="fa-solid fa-building-user"></i>
+                        <span>All Companies</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'jobs:job_list' %}">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span>All Jobs</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'applications:application_list' %}">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>All Applications</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'interviews:interview_list' %}">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span>All Interviews</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'reports:reports_home' %}">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <span>Reports Center</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'reports:analytics' %}">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Analytics Stats</span>
+                    </a>
+                </li>
+            {% endif %}
+            
+            <li class="sidebar-menu-title">Settings & Messages</li>
+            <li class="sidebar-item">
+                <a href="{% url 'notifications:notification_list' %}">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'notifications:webmail' %}">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    {% if user.role == 'student' %}
+                        <span>My Webmail Inbox</span>
+                    {% else %}
+                        <span>Student Webmail</span>
+                    {% endif %}
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'accounts:profile' %}">
+                    <i class="fa-solid fa-id-card"></i>
+                    <span>My Profile</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'accounts:logout' %}">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+            
+        {% else %}
+            <!-- UNAUTHENTICATED PUBLIC MENU -->
+            <li class="sidebar-menu-title">Main Portal</li>
+            <li class="sidebar-item">
+                <a href="{% url 'index' %}">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'about' %}">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>About Us</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'contact' %}">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'faq' %}">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span>FAQ</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'accounts:login' %}">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Login</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'accounts:register' %}">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Register</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</aside>

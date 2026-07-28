@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Student - {{ student.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 40px auto; width: 100%;">
+    <div class="card" style="padding: 32px; box-shadow: var(--shadow-md); text-align: center;">
+        <i class="fa-solid fa-triangle-exclamation" style="font-size: 48px; color: var(--danger); margin-bottom: 20px;"></i>
+        <h2>Confirm Deletion</h2>
+        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-top: 8px; margin-bottom: 24px;">
+            Are you sure you want to permanently delete the student profile for <strong>{{ student.user.get_full_name }}</strong>? This action cannot be undone.
+        </p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div style="display: flex; gap: 12px;">
+                <button type="submit" class="btn btn-danger" style="flex: 1;">Delete Profile</button>
+                <a href="{% url 'students:student_list' %}" class="btn btn-secondary" style="flex: 1; text-align: center;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

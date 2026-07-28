@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports Center - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Reports Center Hub</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Compile and export student records, partner recruiters list, active job vacancies, and interview calendars.</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+        <!-- Placement Report -->
+        <div class="card" style="margin: 0; padding: 20px; border-top: 4px solid var(--success);">
+            <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-graduation-cap" style="color: var(--success); margin-right: 8px;"></i> Placement Report</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Export placed vs unplaced student listings with roll numbers and departments.</p>
+            <div style="display: flex; gap: 8px;">
+                <a href="{% url 'reports:placement_report' %}" class="btn btn-secondary" style="flex: 1; padding: 8px; font-size: 12px;">View List</a>
+                <a href="{% url 'reports:placement_report' %}?export=csv" class="btn btn-primary" style="flex: 1; padding: 8px; font-size: 12px;"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+            </div>
+        </div>
+        
+        <!-- Student Academic Report -->
+        <div class="card" style="margin: 0; padding: 20px; border-top: 4px solid var(--primary);">
+            <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-user-graduate" style="color: var(--primary); margin-right: 8px;"></i> Student List</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Export student database with CGPA scores and graduation batch details.</p>
+            <div style="display: flex; gap: 8px;">
+                <a href="{% url 'reports:student_report' %}" class="btn btn-secondary" style="flex: 1; padding: 8px; font-size: 12px;">View List</a>
+                <a href="{% url 'reports:student_report' %}?export=csv" class="btn btn-primary" style="flex: 1; padding: 8px; font-size: 12px;"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+            </div>
+        </div>
+        
+        <!-- Company Activity Report -->
+        <div class="card" style="margin: 0; padding: 20px; border-top: 4px solid var(--info);">
+            <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-building" style="color: var(--info); margin-right: 8px;"></i> Company Register</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Export registered partner recruiter profiles, websites, and total job postings count.</p>
+            <div style="display: flex; gap: 8px;">
+                <a href="{% url 'reports:company_report' %}" class="btn btn-secondary" style="flex: 1; padding: 8px; font-size: 12px;">View List</a>
+                <a href="{% url 'reports:company_report' %}?export=csv" class="btn btn-primary" style="flex: 1; padding: 8px; font-size: 12px;"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+            </div>
+        </div>
+        
+        <!-- Job Openings Report -->
+        <div class="card" style="margin: 0; padding: 20px; border-top: 4px solid var(--secondary);">
+            <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-briefcase" style="color: var(--secondary); margin-right: 8px;"></i> Vacancies Report</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Export job listings, CTC salary packages, criteria, and applicant counters.</p>
+            <div style="display: flex; gap: 8px;">
+                <a href="{% url 'reports:job_report' %}" class="btn btn-secondary" style="flex: 1; padding: 8px; font-size: 12px;">View List</a>
+                <a href="{% url 'reports:job_report' %}?export=csv" class="btn btn-primary" style="flex: 1; padding: 8px; font-size: 12px;"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+            </div>
+        </div>
+        
+        <!-- Interview Schedule Report -->
+        <div class="card" style="margin: 0; padding: 20px; border-top: 4px solid var(--warning);">
+            <h3 style="margin-bottom: 8px;"><i class="fa-solid fa-calendar-check" style="color: var(--warning); margin-right: 8px;"></i> Interview Schedule</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Export planned interview rounds, candidate associations, status indicators, and results.</p>
+            <div style="display: flex; gap: 8px;">
+                <a href="{% url 'reports:interview_report' %}" class="btn btn-secondary" style="flex: 1; padding: 8px; font-size: 12px;">View List</a>
+                <a href="{% url 'reports:interview_report' %}?export=csv" class="btn btn-primary" style="flex: 1; padding: 8px; font-size: 12px;"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

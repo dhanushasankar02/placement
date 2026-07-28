@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Rejected Applications - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Rejected Applications</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Browse candidate applications that have been rejected.</p>
+    
+    {% if applications %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                        <tr>
+                            <td><strong>{{ app.student.user.get_full_name }}</strong></td>
+                            <td>{{ app.job.title }}</td>
+                            <td>{{ app.job.company.name }}</td>
+                            <td>
+                                <a href="{% url 'applications:application_detail' pk=app.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Review</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No rejected applications found.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+<header>
+    <div class="navbar-left">
+        <button class="toggle-sidebar" id="sidebarToggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <h3>
+            {% if user.is_authenticated %}
+                Welcome, {{ user.first_name|default:user.username }}
+            {% else %}
+                Campus Placement Portal
+            {% endif %}
+        </h3>
+    </div>
+    
+    <div class="navbar-right">
+        {% if user.is_authenticated %}
+            <!-- Notifications Count Badge -->
+            <a href="{% url 'notifications:notification_list' %}" style="position: relative; color: var(--text-main); font-size: 18px;">
+                <i class="fa-regular fa-bell"></i>
+                <!-- Let's check unread notifications count if we want, or mock it with a simple indicator -->
+                <span style="position: absolute; top: -5px; right: -5px; width: 8px; height: 8px; background-color: var(--danger); border-radius: 50%;"></span>
+            </a>
+            
+            <div class="user-menu" onclick="window.location.href='{% url 'accounts:profile' %}';">
+                <span class="badge badge-info">{{ user.get_role_display }}</span>
+                <div class="user-avatar">
+                    {{ user.username|slice:":1"|upper }}
+                </div>
+            </div>
+        {% else %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Login</a>
+            <a href="{% url 'accounts:register' %}" class="btn btn-primary" style="padding: 6px 14px; font-size: 13px;">Register</a>
+        {% endif %}
+    </div>
+</header>

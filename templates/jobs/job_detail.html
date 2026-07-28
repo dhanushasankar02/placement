@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ job.title }} at {{ job.company.name }} - Details{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start;">
+    
+    <!-- Left Column: Details -->
+    <div>
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 24px; margin-bottom: 6px;">{{ job.title }}</h1>
+                    <p style="font-size: 14px; font-weight: 500; color: var(--text-muted);">Company: <a href="{% url 'companies:company_detail' pk=job.company.pk %}" style="font-weight: 600;">{{ job.company.name }}</a></p>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge badge-success" style="font-size: 14px; padding: 6px 14px;">CTC: {{ job.salary_package }}</span>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">Posted: {{ job.created_at|date:"M d, Y" }}</p>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 16px; margin-bottom: 10px;">Job Description</h3>
+                <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; white-space: pre-line;">{{ job.description }}</p>
+            </div>
+            
+            {% if job.requirements %}
+                <div style="margin-bottom: 24px;">
+                    <h3 style="font-size: 16px; margin-bottom: 10px;">Requirements & Responsibilities</h3>
+                    <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; white-space: pre-line;">{{ job.requirements }}</p>
+                </div>
+            {% endif %}
+            
+            {% if job.skills_required %}
+                <div style="margin-bottom: 24px;">
+                    <h3 style="font-size: 16px; margin-bottom: 10px;">Required Skills</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        {% for skill in job.get_skills_list %}
+                            <span class="badge badge-info" style="font-weight: 500;">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Right Column: Sidebar Actions & Info -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- Job parameters card -->
+        <div class="card" style="padding: 24px;">
+            <h3 style="font-size: 16px; margin-bottom: 16px;">Opportunity Details</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 14px; font-size: 13px;">
+                <div>
+                    <span style="color: var(--text-muted);"><i class="fa-solid fa-location-dot" style="margin-right: 6px;"></i> Job Location:</span>
+                    <span style="float: right; font-weight: 600;">{{ job.location }}</span>
+                </div>
+                <div>
+                    <span style="color: var(--text-muted);"><i class="fa-solid fa-briefcase" style="margin-right: 6px;"></i> Job Type:</span>
+                    <span style="float: right; font-weight: 600;">{{ job.get_job_type_display }}</span>
+                </div>
+                <div>
+                    <span style="color: var(--text-muted);"><i class="fa-solid fa-graduation-cap" style="margin-right: 6px;"></i> Min CGPA criteria:</span>
+                    <span style="float: right; font-weight: 600; color: var(--primary);">{{ job.eligibility_criteria }}</span>
+                </div>
+                <div>
+                    <span style="color: var(--text-muted);"><i class="fa-regular fa-clock" style="margin-right: 6px;"></i> Application Deadline:</span>
+                    <span style="float: right; font-weight: 600;">{{ job.application_deadline|date:"M d, Y - h:i A" }}</span>
+                </div>
+            </div>
+            
+            <!-- Actions based on role -->
+            <div style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px; display: flex; flex-direction: column; gap: 12px;">
+                {% if user.role == 'student' %}
+                    {% if has_applied %}
+                        <div class="alert alert-success" style="padding: 10px; margin: 0; text-align: center; justify-content: center; font-size: 13px;">
+                            <span><i class="fa-solid fa-circle-check"></i> Applied Successfully</span>
+                        </div>
+                    {% else %}
+                        {% if is_eligible %}
+                            <a href="{% url 'applications:application_create' job_id=job.pk %}" class="btn btn-primary" style="width: 100%;">Apply Now</a>
+                        {% else %}
+                            <div class="alert alert-danger" style="padding: 10px; margin: 0; text-align: center; justify-content: center; font-size: 13px; font-weight: 600;">
+                                <span><i class="fa-solid fa-circle-xmark"></i> Low CGPA (Ineligible)</span>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <a href="{% url 'jobs:save_job' pk=job.pk %}" class="btn btn-secondary" style="width: 100%;">
+                        {% if is_saved %}
+                            <i class="fa-solid fa-bookmark"></i> Remove Bookmark
+                        {% else %}
+                            <i class="fa-regular fa-bookmark"></i> Save Job
+                        {% endif %}
+                    </a>
+                    
+                {% elif user.role == 'company' and job.company == user.company_profile %}
+                    <a href="{% url 'jobs:job_update' pk=job.pk %}" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-pen-to-square"></i> Edit Post</a>
+                    <a href="{% url 'jobs:job_delete' pk=job.pk %}" class="btn btn-danger" style="width: 100%;"><i class="fa-solid fa-trash"></i> Delete Post</a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Recruiter description card -->
+        <div class="card" style="padding: 20px;">
+            <h4 style="font-size: 14px; margin-bottom: 8px;">Recruiter Profile</h4>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">
+                {{ job.company.description|truncatechars:120 }}
+            </p>
+            <a href="{% url 'companies:company_detail' pk=job.company.pk %}" style="font-size: 12px; font-weight: 600; display: inline-block; margin-top: 8px;">View Company &rarr;</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

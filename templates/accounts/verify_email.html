@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Email - Placement Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 450px; margin: 40px auto; width: 100%;">
+    <div class="card" style="padding: 32px; box-shadow: var(--shadow-md); text-align: center;">
+        <i class="fa-regular fa-envelope-open" style="font-size: 48px; color: var(--primary); margin-bottom: 20px;"></i>
+        <h2>Verify Your Email</h2>
+        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-top: 10px; margin-bottom: 24px;">
+            We've sent a verification email to your address. Please check your inbox and click the link to activate your account.
+        </p>
+        <button class="btn btn-primary" onclick="alert('Verification link resent.');">Resend Email</button>
+    </div>
+</div>
+{% endblock %}

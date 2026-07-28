@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Interviews Report - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
+        <h2>Interview Schedule Log</h2>
+        <a href="?export=csv" class="btn btn-primary"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+    </div>
+    
+    {% if interviews %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>Round</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in interviews %}
+                        <tr>
+                            <td><strong>{{ i.application.student.user.get_full_name }}</strong></td>
+                            <td>{{ i.application.job.title }}</td>
+                            <td>{{ i.application.job.company.name }}</td>
+                            <td>{{ i.round_name }}</td>
+                            <td style="font-size: 13px;">{{ i.interview_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if i.status == 'scheduled' %}
+                                    <span class="badge badge-warning">Scheduled</span>
+                                {% elif i.status == 'completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if i.result == 'cleared' %}
+                                    <span class="badge badge-success">Cleared</span>
+                                {% elif i.result == 'rejected' %}
+                                    <span class="badge badge-danger">Rejected</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Pending</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No interview schedules recorded.</p>
+    {% endif %}
+</div>
+{% endblock %}

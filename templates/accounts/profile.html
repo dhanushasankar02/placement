@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - Placement Portal{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: start;">
+    
+    <!-- User Card -->
+    <div class="card" style="text-align: center; padding: 32px 20px;">
+        <div class="user-avatar" style="width: 80px; height: 80px; font-size: 32px; margin: 0 auto 16px auto; box-shadow: var(--shadow-md);">
+            {{ user.username|slice:":1"|upper }}
+        </div>
+        <h2 style="font-size: 20px; margin-bottom: 4px;">{{ user.get_full_name|default:user.username }}</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">{{ user.email }}</p>
+        <span class="badge badge-info" style="margin-bottom: 24px;">{{ user.get_role_display }}</span>
+        
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
+            <a href="{% url 'accounts:change_password' %}" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-key"></i> Change Password</a>
+        </div>
+    </div>
+    
+    <!-- Detailed Info Card -->
+    <div class="card" style="padding: 32px;">
+        <h3 style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">Profile Information</h3>
+        
+        {% if user.role == 'student' %}
+            {% if profile %}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Roll Number</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;">{{ profile.roll_number }}</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Course & Batch</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;">{{ profile.course }} (Batch {{ profile.batch_year }})</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Department</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;">{{ profile.department }}</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">CGPA</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px; color: var(--primary);">{{ profile.cgpa }}</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Phone Number</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;">{{ profile.phone|default:"Not Provided" }}</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Placement Status</h5>
+                        <p style="margin-top: 4px;">
+                            {% if profile.placement_status == 'placed' %}
+                                <span class="badge badge-success">Placed</span>
+                            {% elif profile.placement_status == 'shortlisted' %}
+                                <span class="badge badge-warning">Shortlisted</span>
+                            {% else %}
+                                <span class="badge badge-danger">Unplaced</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase; margin-bottom: 8px;">Resume CV</h5>
+                    {% if profile.resume %}
+                        <a href="{{ profile.resume.url }}" class="btn btn-secondary" target="_blank" style="font-size: 13px;"><i class="fa-solid fa-file-arrow-down"></i> Download Resume</a>
+                    {% else %}
+                        <p style="font-size: 14px; color: var(--danger); font-weight: 500;">No resume uploaded yet. <a href="{% url 'students:resume_upload' %}" style="text-decoration: underline;">Upload now</a></p>
+                    {% endif %}
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase; margin-bottom: 8px;">Skills Set</h5>
+                    {% if profile.get_skills_list %}
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            {% for skill in profile.get_skills_list %}
+                                <span class="badge badge-info" style="font-weight: 500;">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p style="font-size: 13px; color: var(--text-muted);">No skills added. <a href="{% url 'students:skills' %}" style="text-decoration: underline;">Add Skills</a></p>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p style="color: var(--danger);">No profile loaded. Please contact administrators.</p>
+            {% endif %}
+            
+        {% elif user.role == 'company' %}
+            {% if profile %}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Company Name</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;">{{ profile.name }}</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Website</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;"><a href="{{ profile.website }}" target="_blank">{{ profile.website|default:"Not Provided" }}</a></p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Industry Sector</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;">{{ profile.industry }}</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Contact Email</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;">{{ profile.contact_email }}</p>
+                    </div>
+                    <div>
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">Contact Phone</h5>
+                        <p style="font-weight: 600; font-size: 15px; margin-top: 4px;">{{ profile.contact_phone|default:"Not Provided" }}</p>
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <h5 style="color: var(--text-muted); font-weight: 500; font-size: 12px; text-transform: uppercase;">About Description</h5>
+                        <p style="font-size: 14px; margin-top: 4px; line-height: 1.5;">{{ profile.description|default:"No description provided." }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <p style="color: var(--danger);">No profile registered. Click Edit Profile to create.</p>
+            {% endif %}
+            
+        {% else %}
+            <!-- Placement Officer / Admin -->
+            <p style="font-size: 14px; color: var(--text-muted);">You hold an administrative/officer user session. You can manage placements and view stats through your dashboards.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

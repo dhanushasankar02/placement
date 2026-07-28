@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Post Job - Placement Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 20px auto; width: 100%;">
+    <div class="card" style="padding: 32px; box-shadow: var(--shadow-md);">
+        <h2>Post a Job Vacancy</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Complete the form details to register the hiring requirements.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <span style="color: var(--danger); font-size: 12px; font-weight: 500;">{{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Post Job</button>
+                <a href="{% url 'jobs:job_list' %}" class="btn btn-secondary" style="flex: 1; text-align: center;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

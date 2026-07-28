@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - Campus Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1 style="margin-bottom: 24px;">Frequently Asked Questions</h1>
+    
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div>
+            <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--primary);">Q: How do I apply for jobs on the portal?</h3>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5;">A: First, register as a Student and complete your profile by uploading a resume and filling in your CGPA. Browse the active job lists and click 'Apply' for any job you are eligible for.</p>
+        </div>
+        <hr style="border: 0; border-top: 1px solid var(--border-color);">
+        
+        <div>
+            <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--primary);">Q: Why does the system say I am not eligible to apply?</h3>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5;">A: Each job posted has a minimum eligibility criteria (CGPA). If your profile CGPA is lower than the job's requirements, the apply button will be locked for quality assurance.</p>
+        </div>
+        <hr style="border: 0; border-top: 1px solid var(--border-color);">
+        
+        <div>
+            <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--primary);">Q: How are interviews scheduled?</h3>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5;">A: Once a company shortlists your application, they schedule an interview round. You will receive an in-app notification with the date and links/location for the interview.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

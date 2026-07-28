@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ company.name }} - Details{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: start;">
+    
+    <!-- Left Column: Details -->
+    <div class="card" style="padding: 24px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+            {% if company.logo %}
+                <img src="{{ company.logo.url }}" alt="{{ company.name }} Logo" style="width: 60px; height: 60px; object-fit: contain; border-radius: var(--radius-sm);">
+            {% else %}
+                <div style="width: 60px; height: 60px; background-color: var(--primary-hover); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 24px;">
+                    {{ company.name|slice:":1"|upper }}
+                </div>
+            {% endif %}
+            <div>
+                <h2 style="font-size: 20px; margin: 0;">{{ company.name }}</h2>
+                <span class="badge badge-info" style="margin-top: 4px;">{{ company.industry }}</span>
+            </div>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px; border-top: 1px solid var(--border-color); padding-top: 16px;">
+            <div>
+                <span style="color: var(--text-muted);">Website:</span>
+                <span style="float: right;"><a href="{{ company.website }}" target="_blank" style="font-weight: 500;">{{ company.website|default:"Not Provided" }}</a></span>
+            </div>
+            <div>
+                <span style="color: var(--text-muted);">Contact Email:</span>
+                <span style="float: right; font-weight: 500;">{{ company.contact_email }}</span>
+            </div>
+            <div>
+                <span style="color: var(--text-muted);">Contact Phone:</span>
+                <span style="float: right; font-weight: 500;">{{ company.contact_phone|default:"Not Provided" }}</span>
+            </div>
+            <div style="margin-top: 8px;">
+                <span style="color: var(--text-muted); display: block; margin-bottom: 4px;">Headquarters Address:</span>
+                <p style="font-weight: 500; font-size: 12px; line-height: 1.4;">{{ company.address|default:"Not Provided" }}</p>
+            </div>
+        </div>
+        
+        {% if user.role == 'company' and user.company_profile == company %}
+            <a href="{% url 'companies:company_update' pk=company.pk %}" class="btn btn-primary" style="width: 100%; margin-top: 20px; font-size: 13px;">Edit Profile Details</a>
+        {% endif %}
+    </div>
+    
+    <!-- Right Column: Job Openings & About -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- About -->
+        <div class="card">
+            <h3 style="margin-bottom: 12px;">About the Organization</h3>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">{{ company.description|default:"No description provided." }}</p>
+        </div>
+        
+        <!-- Active Job Vacancies -->
+        <div class="card">
+            <h3 style="margin-bottom: 16px;">Active Job Postings</h3>
+            
+            {% if jobs %}
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    {% for job in jobs %}
+                        <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="font-size: 15px; margin: 0;"><a href="{% url 'jobs:job_detail' pk=job.pk %}">{{ job.title }}</a></h4>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">{{ job.location }} &bull; {{ job.get_job_type_display }}</p>
+                                <p style="font-size: 12px; font-weight: 600; color: var(--success); margin-top: 6px;">CTC: {{ job.salary_package }}</p>
+                            </div>
+                            <a href="{% url 'jobs:job_detail' pk=job.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">View Opportunity</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p style="color: var(--text-muted); font-size: 13px;">No active job postings from this recruiter currently.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

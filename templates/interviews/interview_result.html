@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Result - {{ interview.round_name }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 20px auto; width: 100%;">
+    <div class="card" style="padding: 32px; box-shadow: var(--shadow-md);">
+        <h2>Update Interview Result</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Candidate: <strong>{{ interview.application.student.user.get_full_name }}</strong> &bull; Round: {{ interview.round_name }}</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Round Status</label>
+                <select name="status" class="form-control">
+                    <option value="scheduled" {% if interview.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                    <option value="completed" {% if interview.status == 'completed' %}selected{% endif %}>Completed</option>
+                    <option value="cancelled" {% if interview.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Round Result</label>
+                <select name="result" class="form-control">
+                    <option value="pending" {% if interview.result == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="cleared" {% if interview.result == 'cleared' %}selected{% endif %}>Cleared</option>
+                    <option value="rejected" {% if interview.result == 'rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Recruiter Feedback</label>
+                <textarea name="feedback" class="form-control" rows="5" placeholder="Enter notes on candidate's technical skills, communication, performance, or HR fit...">{{ interview.feedback|default:"" }}</textarea>
+            </div>
+            
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save Results</button>
+                <a href="{% url 'interviews:interview_detail' pk=interview.pk %}" class="btn btn-secondary" style="flex: 1; text-align: center;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

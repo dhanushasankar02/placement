@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Interview Round - Detail{% endblock %}
+
+{% block content %}
+<div style="max-width: 650px; margin: 20px auto; width: 100%;">
+    <div class="card" style="padding: 32px; box-shadow: var(--shadow-md);">
+        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <span class="badge badge-info" style="margin-bottom: 8px;">Round {{ interview.round_number }}</span>
+                <h2>{{ interview.round_name }}</h2>
+                <p style="color: var(--text-muted); font-size: 13px; font-weight: 500; margin-top: 4px;">Candidate: <a href="{% url 'students:student_detail' pk=interview.application.student.pk %}" style="font-weight: 600;">{{ interview.application.student.user.get_full_name }}</a></p>
+            </div>
+            
+            <div style="text-align: right;">
+                {% if interview.status == 'scheduled' %}
+                    <span class="badge badge-warning" style="font-size: 13px;">Scheduled</span>
+                {% elif interview.status == 'completed' %}
+                    <span class="badge badge-success" style="font-size: 13px;">Completed</span>
+                {% else %}
+                    <span class="badge badge-danger" style="font-size: 13px;">Cancelled</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px; font-size: 14px; margin-bottom: 24px;">
+            <div>
+                <span style="color: var(--text-muted);"><i class="fa-solid fa-briefcase" style="margin-right: 6px;"></i> Job Role:</span>
+                <strong style="float: right;">{{ interview.application.job.title }} ({{ interview.application.job.company.name }})</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-muted);"><i class="fa-regular fa-calendar-check" style="margin-right: 6px;"></i> Date & Time:</span>
+                <strong style="float: right; color: var(--primary);">{{ interview.interview_date|date:"M d, Y - h:i A" }}</strong>
+            </div>
+            <div>
+                <span style="color: var(--text-muted);"><i class="fa-solid fa-location-arrow" style="margin-right: 6px;"></i> Location/Link:</span>
+                <span style="float: right;">
+                    {% if interview.location_or_link|slice:":4" == 'http' %}
+                        <a href="{{ interview.location_or_link }}" target="_blank" style="font-weight: 600;">Join Meeting <i class="fa-solid fa-square-arrow-up-right"></i></a>
+                    {% else %}
+                        <strong>{{ interview.location_or_link }}</strong>
+                    {% endif %}
+                </span>
+            </div>
+            <div>
+                <span style="color: var(--text-muted);"><i class="fa-solid fa-award" style="margin-right: 6px;"></i> Round Result:</span>
+                <span style="float: right;">
+                    {% if interview.result == 'cleared' %}
+                        <span class="badge badge-success">Cleared</span>
+                    {% elif interview.result == 'rejected' %}
+                        <span class="badge badge-danger">Rejected</span>
+                    {% else %}
+                        <span class="badge badge-warning">Pending</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <div style="background-color: #f8fafc; border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 24px; font-size: 13px;">
+            <strong style="display: block; margin-bottom: 6px;">Recruiter Feedback & Notes:</strong>
+            <p style="color: var(--text-muted); line-height: 1.5; white-space: pre-line;">{{ interview.feedback|default:"No feedback posted for this round yet." }}</p>
+        </div>
+        
+        <!-- Actions -->
+        <div style="display: flex; gap: 12px;">
+            {% if user.role == 'company' and interview.application.job.company == user.company_profile or user.role == 'admin' or user.role == 'officer' %}
+                <a href="{% url 'interviews:interview_result' pk=interview.pk %}" class="btn btn-primary" style="flex: 1;"><i class="fa-solid fa-square-poll-vertical"></i> Update Result & Feedback</a>
+            {% endif %}
+            <a href="{% url 'interviews:interview_list' %}" class="btn btn-secondary" style="flex: 1; text-align: center;">Back to List</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

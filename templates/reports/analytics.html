@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Placement Analytics - Placement Portal{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 24px;">
+    <h2>Placement Analytics</h2>
+    <p style="color: var(--text-muted); font-size: 13px;">Review aggregate summaries of the recruitment pipeline.</p>
+</div>
+
+<!-- Progress metrics row -->
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; margin-bottom: 30px; align-items: start;">
+    
+    <!-- Placement percentage ring meter -->
+    <div class="card" style="text-align: center; padding: 30px;">
+        <h3 style="margin-bottom: 20px;">Overall Placement Rate</h3>
+        
+        <div style="position: relative; width: 140px; height: 140px; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: radial-gradient(closest-side, white 79%, transparent 80% 100%), conic-gradient(var(--success) {{ placement_rate }}%, #e2e8f0 0);">
+            <div style="text-align: center;">
+                <h2 style="font-size: 28px; margin: 0;">{{ placement_rate }}%</h2>
+                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Placed</span>
+            </div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-around; margin-top: 24px; font-size: 13px;">
+            <div>
+                <span style="display: block; width: 10px; height: 10px; border-radius: 50%; background-color: var(--success); margin: 0 auto 6px auto;"></span>
+                Placed: <strong>{{ placed_students }}</strong>
+            </div>
+            <div>
+                <span style="display: block; width: 10px; height: 10px; border-radius: 50%; background-color: var(--danger); margin: 0 auto 6px auto;"></span>
+                Unplaced: <strong>{{ unplaced_students }}</strong>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pipeline stats -->
+    <div class="card" style="padding: 24px;">
+        <h3 style="margin-bottom: 16px;">Recruitment Pipeline Summary</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px;">
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                <span style="color: var(--text-muted);">Total Candidates Registered:</span>
+                <strong style="float: right;">{{ total_students }}</strong>
+            </div>
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                <span style="color: var(--text-muted);">Total Job Openings:</span>
+                <strong style="float: right;">{{ total_jobs }}</strong>
+            </div>
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                <span style="color: var(--text-muted);">Total Applications Submitted:</span>
+                <strong style="float: right;">{{ total_applications }}</strong>
+            </div>
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                <span style="color: var(--text-muted);">Total Interview Rounds:</span>
+                <strong style="float: right;">{{ total_interviews }}</strong>
+            </div>
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; grid-column: span 2;">
+                <span style="color: var(--text-muted);">Average Candidate CGPA:</span>
+                <strong style="float: right; color: var(--primary);">{{ average_cgpa }}</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Department Breakdown -->
+<div class="card">
+    <h3 style="margin-bottom: 16px;">Department Placement Statistics</h3>
+    {% if dept_stats %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Total Students</th>
+                        <th>Placed Students</th>
+                        <th>Placement Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dept in dept_stats %}
+                        <tr>
+                            <td><strong>{{ dept.department }}</strong></td>
+                            <td>{{ dept.total }}</td>
+                            <td><strong>{{ dept.placed }}</strong></td>
+                            <td>
+                                <!-- Simple custom HTML/CSS progress bar -->
+                                <div style="display: flex; align-items: center; gap: 10px; width: 100%; max-width: 250px;">
+                                    <div style="flex-grow: 1; height: 8px; background-color: #e2e8f0; border-radius: 4px; overflow: hidden;">
+                                        <div style="height: 100%; background-color: var(--success); width: {{ dept.placed_rate }}%;"></div>
+                                    </div>
+                                    <span style="font-size: 12px; font-weight: 600;">{{ dept.placed_rate }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); font-size: 13px;">No departmental statistics available.</p>
+    {% endif %}
+</div>
+{% endblock %}

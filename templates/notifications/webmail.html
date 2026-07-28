@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+
+{% block title %}Webmail Inbox Simulator - Placement Portal{% endblock %}
+
+{% block extra_css %}
+<style>
+    .webmail-container {
+        display: flex;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        height: calc(100vh - 220px);
+        min-height: 500px;
+        overflow: hidden;
+    }
+
+    /* Left pane: Email List */
+    .email-list-pane {
+        width: 380px;
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        background-color: #fafbfc;
+    }
+
+    .pane-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-color);
+        background-color: var(--bg-card);
+    }
+
+    .pane-header h3 {
+        font-size: 16px;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .email-items-container {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    .email-item {
+        display: block;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-main);
+        transition: var(--transition);
+        text-decoration: none !important;
+        position: relative;
+    }
+
+    .email-item:hover {
+        background-color: #f1f5f9;
+    }
+
+    .email-item.active {
+        background-color: #eff6ff;
+        border-left: 4px solid var(--primary);
+    }
+
+    .email-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 6px;
+    }
+
+    .email-subject {
+        font-weight: 600;
+        font-size: 14px;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 220px;
+    }
+
+    .email-date {
+        font-size: 11px;
+        color: var(--text-muted);
+    }
+
+    .email-excerpt {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Right pane: Email Content */
+    .email-content-pane {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-card);
+    }
+
+    .email-detail-header {
+        padding: 24px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .email-detail-subject {
+        font-size: 20px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 16px;
+    }
+
+    .email-meta-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .sender-recipient-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        font-size: 13px;
+    }
+
+    .email-meta-label {
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .email-meta-val {
+        color: var(--text-main);
+        font-weight: 600;
+    }
+
+    .email-detail-body {
+        padding: 24px;
+        overflow-y: auto;
+        flex-grow: 1;
+        line-height: 1.6;
+        font-size: 14px;
+        color: #334155;
+        white-space: pre-line;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--text-muted);
+        padding: 48px;
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 48px;
+        color: #cbd5e1;
+        margin-bottom: 16px;
+    }
+
+    .selector-bar {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .selector-title {
+        font-weight: 600;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .selector-control select {
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-color);
+        font-family: inherit;
+        font-size: 14px;
+        background-color: var(--bg-card);
+        min-width: 250px;
+        outline: none;
+    }
+
+    .selector-control select:focus {
+        border-color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 24px;">
+    <h2>Webmail Simulator</h2>
+    <p style="color: var(--text-muted); font-size: 14px;">Simulate and verify the email notifications dispatched by the Placement Portal system.</p>
+</div>
+
+<!-- Selector Bar for Admins / Recruiters -->
+<div class="selector-bar">
+    <div class="selector-title">
+        <i class="fa-solid fa-envelope-open-text" style="color: var(--primary);"></i>
+        {% if email_list %}
+            <span>Student Inbox Simulator (Staff/Recruiter View)</span>
+        {% else %}
+            <span>My Webmail Inbox (Student View)</span>
+        {% endif %}
+    </div>
+    
+    {% if email_list %}
+    <div class="selector-control">
+        <form method="GET" action="{% url 'notifications:webmail' %}" id="inbox-form">
+            <span class="email-meta-label" style="margin-right: 8px;">Viewing Inbox for:</span>
+            <select name="email" onchange="document.getElementById('inbox-form').submit()">
+                {% for item in email_list %}
+                    <option value="{{ item.email }}" {% if item.email == selected_email %}selected{% endif %}>
+                        {{ item.name }} ({{ item.email }})
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+    {% else %}
+    <div style="font-size: 13px; font-weight: 600; color: var(--primary); background-color: var(--info-bg); padding: 6px 12px; border-radius: 50px;">
+        <i class="fa-solid fa-circle-info"></i> {{ selected_email }}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Email Client Container -->
+<div class="webmail-container">
+    
+    <!-- Left Pane: List of Emails -->
+    <div class="email-list-pane">
+        <div class="pane-header">
+            <h3>
+                <i class="fa-solid fa-inbox" style="color: var(--text-muted);"></i>
+                Inbox ({{ emails.count }})
+            </h3>
+        </div>
+        
+        <div class="email-items-container">
+            {% if emails %}
+                {% for email in emails %}
+                    <a href="?{% if email_list %}email={{ selected_email }}&{% endif %}id={{ email.id }}" 
+                       class="email-item {% if email.id == active_email.id %}active{% endif %}">
+                        <div class="email-item-header">
+                            <span class="email-subject">{{ email.subject }}</span>
+                            <span class="email-date">{{ email.sent_at|date:"M d" }}</span>
+                        </div>
+                        <div class="email-excerpt">{{ email.body }}</div>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state" style="padding: 32px 16px;">
+                    <i class="fa-regular fa-envelope" style="font-size: 32px;"></i>
+                    <p style="font-size: 13px;">No emails logged for this recipient.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Pane: Email Detail -->
+    <div class="email-content-pane">
+        {% if active_email %}
+            <div class="email-detail-header">
+                <div class="email-detail-subject">{{ active_email.subject }}</div>
+                
+                <div class="email-meta-row">
+                    <div class="sender-recipient-info">
+                        <div>
+                            <span class="email-meta-label">From:</span>
+                            <span class="email-meta-val">Placement Portal &lt;placement@example.com&gt;</span>
+                        </div>
+                        <div>
+                            <span class="email-meta-label">To:</span>
+                            <span class="email-meta-val">{{ active_email.recipient }}</span>
+                        </div>
+                    </div>
+                    <div class="email-date" style="font-size: 13px; font-weight: 500;">
+                        <i class="fa-regular fa-clock" style="margin-right: 4px;"></i>
+                        {{ active_email.sent_at|date:"F d, Y - g:i A" }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="email-detail-body">{{ active_email.body }}</div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fa-regular fa-envelope-open"></i>
+                <h3>No Email Selected</h3>
+                <p style="max-width: 300px; margin-top: 8px; font-size: 13px;">Select an email from the inbox list on the left to read its contents.</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

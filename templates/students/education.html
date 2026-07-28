@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Education History - Placement Portal{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    
+    <!-- Left Column: Add Entry -->
+    <div class="card" style="padding: 24px;">
+        <h2>Add Education Entry</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Provide details about high school, diploma, bachelor's, or master's degrees.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <span style="color: var(--danger); font-size: 12px; font-weight: 500;">{{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px;">Save Entry</button>
+        </form>
+    </div>
+    
+    <!-- Right Column: List History -->
+    <div class="card" style="padding: 24px;">
+        <h2>Academic Qualifications</h2>
+        <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px;">Qualifications registered to your profile:</p>
+        
+        {% if history %}
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                {% for edu in history %}
+                    <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+                        <h4 style="font-size: 15px;">{{ edu.degree }}</h4>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">{{ edu.institution }}</p>
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; font-weight: 600;">
+                            <span>Passed: {{ edu.passing_year }}</span>
+                            <span style="color: var(--primary);">Score: {{ edu.percentage_cgpa }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: var(--text-muted); font-size: 13px; text-align: center; padding: 40px 0;">No qualifications added yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

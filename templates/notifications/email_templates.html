@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Email Templates - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Email Templates Setup</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Configured system email notification templates.</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+            <h4>Application Shortlisted Template</h4>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Subject: Congratulations! You have been shortlisted</p>
+            <pre style="background: #f8fafc; padding: 10px; font-size: 11px; margin-top: 8px; border-radius: 4px; border: 1px solid var(--border-color);">Dear {Student Name},
+We are pleased to inform you that your application for {Job Title} has been shortlisted. Please check your calendar for scheduled interview rounds.</pre>
+        </div>
+        
+        <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+            <h4>Interview Scheduled Template</h4>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Subject: Interview Scheduled for {Job Title}</p>
+            <pre style="background: #f8fafc; padding: 10px; font-size: 11px; margin-top: 8px; border-radius: 4px; border: 1px solid var(--border-color);">Dear {Student Name},
+Your interview for the post of {Job Title} has been scheduled on {Date}.
+Round: {Round Name}
+Meeting link: {Link}</pre>
+        </div>
+    </div>
+</div>
+{% endblock %}

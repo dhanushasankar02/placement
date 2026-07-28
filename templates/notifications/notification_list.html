@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
+        <h2>My Notifications</h2>
+        <a href="{% url 'notifications:unread_notifications' %}" style="font-size: 13px; font-weight: 600;">Show Unread Only</a>
+    </div>
+    
+    {% if notifications %}
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            {% for note in notifications %}
+                <div style="padding: 16px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center; {% if not note.is_read %}background-color: #f0fdfa; border-left: 4px solid var(--success);{% endif %}">
+                    <div>
+                        <h4 style="font-size: 15px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                            {{ note.title }}
+                            {% if not note.is_read %}
+                                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: var(--success);"></span>
+                            {% endif %}
+                        </h4>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">{{ note.message }}</p>
+                        <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 6px;">{{ note.created_at|date:"M d, Y - h:i A" }}</span>
+                    </div>
+                    
+                    <a href="{% url 'notifications:notification_detail' pk=note.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">View</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">You have no notifications currently.</p>
+    {% endif %}
+</div>
+{% endblock %}

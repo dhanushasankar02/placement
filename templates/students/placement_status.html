@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Placement Status - Placement Portal{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 30px auto; width: 100%;">
+    <div class="card" style="padding: 32px; text-align: center; box-shadow: var(--shadow-md);">
+        <i class="fa-solid fa-graduation-cap" style="font-size: 48px; color: var(--primary); margin-bottom: 20px;"></i>
+        <h2>Placement Status</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 8px;">Your registered placement status on the portal is:</p>
+        
+        <div style="margin: 24px 0;">
+            {% if student.placement_status == 'placed' %}
+                <span class="badge badge-success" style="font-size: 18px; padding: 8px 20px;">Placed</span>
+                <p style="color: var(--success); font-weight: 600; margin-top: 12px;">Congratulations on your placement!</p>
+            {% elif student.placement_status == 'shortlisted' %}
+                <span class="badge badge-warning" style="font-size: 18px; padding: 8px 20px;">Shortlisted</span>
+                <p style="color: var(--warning); font-weight: 600; margin-top: 12px;">You are shortlisted. Prepare for your rounds!</p>
+            {% else %}
+                <span class="badge badge-danger" style="font-size: 18px; padding: 8px 20px;">Unplaced</span>
+                <p style="color: var(--danger); font-weight: 600; margin-top: 12px;">Keep studying and applying. You got this!</p>
+            {% endif %}
+        </div>
+        
+        <a href="{% url 'dashboard:home' %}" class="btn btn-secondary" style="width: 100%;">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

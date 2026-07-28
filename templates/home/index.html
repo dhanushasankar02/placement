@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - Campus Placement Portal{% endblock %}
+
+{% block content %}
+<div class="hero" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 60px 40px; border-radius: var(--radius-lg); text-align: center; margin-bottom: 40px; box-shadow: var(--shadow-lg);">
+    <h1 style="color: white; font-size: 42px; margin-bottom: 16px; font-weight: 800; font-family: 'Outfit', sans-serif;">Build Your Career, Shape Your Future</h1>
+    <p style="font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6;">A unified and premium platform for students, recruiters, and placement officers to manage and streamline campus recruitments.</p>
+    
+    <div style="display: flex; gap: 16px; justify-content: center;">
+        <a href="{% url 'accounts:register' %}?role=student" class="btn btn-primary" style="background-color: white; color: var(--primary); box-shadow: var(--shadow-md);">Register as Student</a>
+        <a href="{% url 'accounts:register' %}?role=company" class="btn btn-secondary" style="background-color: rgba(255, 255, 255, 0.15); color: white; border: 1px solid rgba(255,255,255,0.25);">Post Jobs (Recruiter)</a>
+    </div>
+</div>
+
+<h2 style="font-size: 24px; margin-bottom: 24px;">Why Choose Our Platform?</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+    <div class="card" style="text-align: center; padding: 32px 24px;">
+        <i class="fa-solid fa-graduation-cap" style="font-size: 40px; color: var(--primary); margin-bottom: 16px;"></i>
+        <h3 style="margin-bottom: 12px;">For Students</h3>
+        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5;">Build a comprehensive profile with education details, skills, and certifications. Apply to top-tier companies with one click and track status updates instantly.</p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 32px 24px;">
+        <i class="fa-solid fa-building" style="font-size: 40px; color: var(--secondary); margin-bottom: 16px;"></i>
+        <h3 style="margin-bottom: 12px;">For Recruiters</h3>
+        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5;">Post job vacancies, screen resumes, shortlist candidates, and schedule interview rounds. Manage all interview feedback and results in one dashboard.</p>
+    </div>
+    
+    <div class="card" style="text-align: center; padding: 32px 24px;">
+        <i class="fa-solid fa-chart-line" style="font-size: 40px; color: var(--success); margin-bottom: 16px;"></i>
+        <h3 style="margin-bottom: 12px;">For Placement Officers</h3>
+        <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5;">Monitor student placement statistics, view company registrations, generate comprehensive CSV reports, and oversee the entire recruitment pipeline.</p>
+    </div>
+</div>
+{% endblock %}

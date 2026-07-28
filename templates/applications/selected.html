@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Selected Candidates - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Selected / Placed Candidates</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Browse candidates who have successfully secured placement offers.</p>
+    
+    {% if applications %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Job Title</th>
+                        <th>Company</th>
+                        <th>CTC package</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                        <tr>
+                            <td><strong>{{ app.student.user.get_full_name }}</strong></td>
+                            <td>{{ app.job.title }}</td>
+                            <td>{{ app.job.company.name }}</td>
+                            <td style="font-weight: 600; color: var(--success);">{{ app.job.salary_package }}</td>
+                            <td>
+                                <a href="{% url 'applications:application_detail' pk=app.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Review details</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No placement offers secured in the system currently.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Saved Jobs - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Bookmarked Opportunities</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Jobs you have bookmarked to review or apply for later.</p>
+    
+    {% if saved %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+            {% for entry in saved %}
+                <div class="card" style="margin: 0; padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                            <div>
+                                <h3 style="font-size: 18px; margin-bottom: 4px;">{{ entry.job.title }}</h3>
+                                <p style="color: var(--text-muted); font-size: 13px; font-weight: 500;">{{ entry.job.company.name }}</p>
+                            </div>
+                            <span class="badge badge-success">{{ entry.job.salary_package }}</span>
+                        </div>
+                        
+                        <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                            <span class="badge badge-info">{{ entry.job.get_job_type_display }}</span>
+                            <span class="badge badge-warning">Min CGPA: {{ entry.job.eligibility_criteria }}</span>
+                        </div>
+                        
+                        <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+                            <p style="margin-bottom: 6px;"><i class="fa-solid fa-location-dot" style="color: var(--primary); margin-right: 6px;"></i> {{ entry.job.location }}</p>
+                            <p><i class="fa-regular fa-clock" style="color: var(--primary); margin-right: 6px;"></i> Apply by: {{ entry.job.application_deadline|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <a href="{% url 'jobs:job_detail' pk=entry.job.pk %}" class="btn btn-primary" style="flex: 1; padding: 8px 12px; font-size: 12px;">View</a>
+                        <a href="{% url 'jobs:save_job' pk=entry.job.pk %}" class="btn btn-danger" style="padding: 8px 12px; font-size: 12px;"><i class="fa-solid fa-trash"></i></a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">You have not bookmarked any jobs yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

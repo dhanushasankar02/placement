@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}My Job Postings - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+        <div>
+            <h2>My Posted Jobs</h2>
+            <p style="color: var(--text-muted); font-size: 13px;">Manage your active job openings and check applicant count.</p>
+        </div>
+        
+        <a href="{% url 'jobs:job_create' %}" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i> Post a New Job</a>
+    </div>
+    
+    {% if jobs %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Location</th>
+                        <th>Type</th>
+                        <th>Package</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Applicants</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                        <tr>
+                            <td><strong><a href="{% url 'jobs:job_detail' pk=job.pk %}">{{ job.title }}</a></strong></td>
+                            <td>{{ job.location }}</td>
+                            <td><span class="badge badge-info">{{ job.get_job_type_display }}</span></td>
+                            <td style="font-weight: 600; color: var(--success);">{{ job.salary_package }}</td>
+                            <td style="font-size: 13px;">{{ job.application_deadline|date:"M d, Y" }}</td>
+                            <td>
+                                {% if job.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Closed</span>
+                                {% endif %}
+                            </td>
+                            <td><strong>{{ job.applications.count }}</strong></td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <a href="{% url 'jobs:job_update' pk=job.pk %}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                                    <a href="{% url 'jobs:job_delete' pk=job.pk %}" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">You have not posted any jobs yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

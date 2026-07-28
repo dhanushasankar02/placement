@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Interview Schedule - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>My Scheduled Interviews</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Timelines and venues for your upcoming interview rounds.</p>
+    
+    {% if interviews %}
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            {% for interview in interviews %}
+                <div style="padding: 20px; border: 1px solid var(--border-color); border-radius: var(--radius-md); border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <span class="badge badge-info" style="margin-bottom: 8px;">Round {{ interview.round_number }}</span>
+                        <h3 style="font-size: 18px; margin-bottom: 4px;">{{ interview.round_name }}</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">{{ interview.application.job.title }} at <strong>{{ interview.application.job.company.name }}</strong></p>
+                        <p style="font-size: 13px; margin-top: 8px;"><i class="fa-solid fa-location-arrow" style="color: var(--primary);"></i> Venue/Link: 
+                            {% if interview.location_or_link|slice:":4" == 'http' %}
+                                <a href="{{ interview.location_or_link }}" target="_blank">{{ interview.location_or_link }}</a>
+                            {% else %}
+                                {{ interview.location_or_link }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div style="text-align: right;">
+                        <h4 style="color: var(--primary); font-size: 16px; margin-bottom: 6px;"><i class="fa-regular fa-calendar-check"></i> {{ interview.interview_date|date:"M d, Y" }}</h4>
+                        <p style="font-size: 13px; font-weight: 500; color: var(--text-muted);"><i class="fa-regular fa-clock"></i> {{ interview.interview_date|date:"h:i A" }}</p>
+                        
+                        <div style="margin-top: 12px;">
+                            {% if interview.status == 'scheduled' %}
+                                <span class="badge badge-warning">Scheduled</span>
+                            {% elif interview.status == 'completed' %}
+                                <span class="badge badge-success">Completed</span>
+                            {% else %}
+                                <span class="badge badge-danger">Cancelled</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No interview schedules found on your profile.</p>
+    {% endif %}
+</div>
+{% endblock %}

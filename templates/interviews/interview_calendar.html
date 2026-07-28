@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Interview Calendar - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Interview Calendar Schedule</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Chronological timeline of active scheduled interview rounds.</p>
+    
+    {% if interviews %}
+        <div style="display: flex; flex-direction: column; gap: 16px; border-left: 2px solid var(--border-color); padding-left: 20px; margin-left: 10px;">
+            {% for interview in interviews %}
+                <div style="position: relative; padding: 16px; background-color: var(--bg-main); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <!-- Bullet node -->
+                    <div style="position: absolute; left: -27px; top: 22px; width: 12px; height: 12px; border-radius: 50%; background-color: var(--primary); border: 2px solid white;"></div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <span class="badge badge-info" style="font-size: 11px;">{{ interview.interview_date|date:"h:i A" }}</span>
+                            <h4 style="font-size: 15px; margin-top: 6px;">{{ interview.round_name }}</h4>
+                            <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                                Candidate: {{ interview.application.student.user.get_full_name }} &bull; Job: {{ interview.application.job.title }}
+                            </p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--primary);">{{ interview.interview_date|date:"M d, Y" }}</span>
+                            <br><a href="{% url 'interviews:interview_detail' pk=interview.pk %}" style="font-size: 12px; font-weight: 500; display: inline-block; margin-top: 6px;">Details &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No scheduled interviews found in your calendar.</p>
+    {% endif %}
+</div>
+{% endblock %}

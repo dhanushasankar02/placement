@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Categories - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Job Categories</h2>
+    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Browse active jobs filtered by employment classifications.</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+        <!-- Full-Time Jobs -->
+        <div class="card" style="margin: 0; padding: 20px; border-top: 4px solid var(--primary);">
+            <h3 style="margin-bottom: 12px;"><i class="fa-solid fa-business-time" style="color: var(--primary); margin-right: 8px;"></i> Full-Time</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Browse long-term career opportunities with full benefits.</p>
+            <span class="badge badge-info" style="margin-bottom: 20px;">Open posts: {{ full_time.count }}</span>
+            <a href="{% url 'jobs:job_list' %}" class="btn btn-secondary" style="width: 100%; font-size: 12px;">Browse Full-Time</a>
+        </div>
+        
+        <!-- Internships -->
+        <div class="card" style="margin: 0; padding: 20px; border-top: 4px solid var(--success);">
+            <h3 style="margin-bottom: 12px;"><i class="fa-solid fa-graduation-cap" style="color: var(--success); margin-right: 8px;"></i> Internships</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Discover training profiles and industrial exposure roles.</p>
+            <span class="badge badge-success" style="margin-bottom: 20px;">Open posts: {{ internships.count }}</span>
+            <a href="{% url 'jobs:job_list' %}" class="btn btn-secondary" style="width: 100%; font-size: 12px;">Browse Internships</a>
+        </div>
+        
+        <!-- Part-Time -->
+        <div class="card" style="margin: 0; padding: 20px; border-top: 4px solid var(--warning);">
+            <h3 style="margin-bottom: 12px;"><i class="fa-solid fa-user-clock" style="color: var(--warning); margin-right: 8px;"></i> Part-Time</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 16px;">Browse flexible hours vacancies suitable for student schedules.</p>
+            <span class="badge badge-warning" style="margin-bottom: 20px;">Open posts: {{ part_time.count }}</span>
+            <a href="{% url 'jobs:job_list' %}" class="btn btn-secondary" style="width: 100%; font-size: 12px;">Browse Part-Time</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

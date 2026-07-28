@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Placement Report - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
+        <h2>Placement Report</h2>
+        <a href="?export=csv" class="btn btn-primary"><i class="fa-solid fa-file-excel"></i> Export CSV</a>
+    </div>
+    
+    {% if students %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll Number</th>
+                        <th>Student Name</th>
+                        <th>Department</th>
+                        <th>Course</th>
+                        <th>CGPA</th>
+                        <th>Placement Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in students %}
+                        <tr>
+                            <td>{{ s.roll_number }}</td>
+                            <td><strong>{{ s.user.get_full_name }}</strong></td>
+                            <td>{{ s.department }}</td>
+                            <td>{{ s.course }}</td>
+                            <td>{{ s.cgpa }}</td>
+                            <td>
+                                {% if s.placement_status == 'placed' %}
+                                    <span class="badge badge-success">Placed</span>
+                                {% elif s.placement_status == 'shortlisted' %}
+                                    <span class="badge badge-warning">Shortlisted</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Unplaced</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p style="color: var(--text-muted); text-align: center; padding: 40px 0;">No student profiles registered.</p>
+    {% endif %}
+</div>
+{% endblock %}
