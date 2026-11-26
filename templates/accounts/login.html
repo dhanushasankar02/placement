@@ -32,6 +32,37 @@
             
             <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px;">Sign In</button>
         </form>
+
+        <!-- Saved Credentials Quick Fill -->
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color, #e2e8f0);">
+            <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+                <span><i class="fa-solid fa-key" style="margin-right: 5px;"></i> Saved Credentials</span>
+                <span style="font-size: 11px; text-transform: none; color: #64748b; font-weight: normal;">Click to auto-fill</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button type="button" onclick="fillCredentials('growwpark', '12345')" class="btn" style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; cursor: pointer; text-align: left; width: 100%;">
+                    <span><strong><i class="fa-solid fa-building" style="color: #0284c7; margin-right: 6px;"></i> Groww Park:</strong> <code>growwpark</code></span>
+                    <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-family: monospace;">12345</span>
+                </button>
+                <button type="button" onclick="fillCredentials('Dhanusha', 'Dhanusha')" class="btn" style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; cursor: pointer; text-align: left; width: 100%;">
+                    <span><strong><i class="fa-solid fa-shield-halved" style="color: #8b5cf6; margin-right: 6px;"></i> Admin:</strong> <code>Dhanusha</code></span>
+                    <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-family: monospace;">Dhanusha</span>
+                </button>
+                <button type="button" onclick="fillCredentials('Dhanush', 'Password@123')" class="btn" style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; cursor: pointer; text-align: left; width: 100%;">
+                    <span><strong><i class="fa-solid fa-user-graduate" style="color: #10b981; margin-right: 6px;"></i> Student:</strong> <code>Dhanush</code></span>
+                    <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-family: monospace;">Password@123</span>
+                </button>
+            </div>
+        </div>
+
+        <script>
+            function fillCredentials(user, pass) {
+                const userInput = document.getElementById('id_username') || document.querySelector('input[name="username"]');
+                const passInput = document.getElementById('id_password') || document.querySelector('input[name="password"]');
+                if (userInput) userInput.value = user;
+                if (passInput) passInput.value = pass;
+            }
+        </script>
         
         <div style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-muted);">
             Don't have an account? <a href="{% url 'accounts:register' %}" style="font-weight: 600;">Sign up</a>
