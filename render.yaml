@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: placement
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn placement.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
