@@ -27,13 +27,12 @@
 ---
 
 ### 4. Recruiter / Company Accounts
-- **Default password:** `Password@123`
 
-| Username | Company / Organization | Contact Email | Role |
-| :--- | :--- | :--- | :--- |
-| **`Tamil`** | GrowwPark / Recruiter | `growwpark@gmail.com` | Company |
-| **`Wipro`** | Wipro Technologies | `wipro@gmail.com` | Company |
-| **`infosys`** | Infosys | `infosys@gmail.com` | Company |
+| Username | Password | Company / Organization | Contact Email | Role |
+| :--- | :--- | :--- | :--- | :--- |
+| **`growwpark`** | `12345` | Groww Park | `growwpark@gmail.com` | Company |
+| **`Wipro`** | `Password@123` | Wipro Technologies | `wipro@gmail.com` | Company |
+| **`infosys`** | `Password@123` | Infosys | `infosys@gmail.com` | Company |
 
 ---
 
