@@ -40,10 +40,13 @@ def register_view(request):
         if request.method == 'POST':
             form = CompanySignUpForm(request.POST)
             if form.is_valid():
-                user = form.save()
-                login(request, user)
-                messages.success(request, "Recruiter account registered successfully!")
-                return redirect('dashboard:home')
+                try:
+                    user = form.save()
+                    login(request, user)
+                    messages.success(request, "Recruiter account registered successfully!")
+                    return redirect('dashboard:home')
+                except Exception:
+                    messages.error(request, "An account with these details could not be registered.")
             else:
                 messages.error(request, "Please correct the errors below.")
         else:
@@ -53,10 +56,14 @@ def register_view(request):
         if request.method == 'POST':
             form = StudentSignUpForm(request.POST)
             if form.is_valid():
-                user = form.save()
-                login(request, user)
-                messages.success(request, "Student account registered successfully!")
-                return redirect('dashboard:home')
+                try:
+                    user = form.save()
+                    login(request, user)
+                    messages.success(request, "Student account registered successfully!")
+                    return redirect('dashboard:home')
+                except Exception:
+                    form.add_error('roll_number', "A student with this roll number already exists.")
+                    messages.error(request, "Please correct the errors below.")
             else:
                 messages.error(request, "Please correct the errors below.")
         else:
