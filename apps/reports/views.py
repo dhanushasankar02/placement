@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Count, Avg
+from django.db.models import Count, Avg, Q
 from apps.students.models import StudentProfile
 from apps.companies.models import CompanyProfile
 from apps.jobs.models import Job
