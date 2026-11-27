@@ -45,6 +45,47 @@ def interview_schedule(request, app_id=None):
                 message=f"Recruiter scheduled an interview '{interview.round_name}' on {interview.interview_date}."
             )
             
+            # Send Email to Student
+            student_user = interview.application.student.user
+            if student_user.email:
+                from django.core.mail import send_mail
+                from django.conf import settings
+
+                student_name = student_user.get_full_name() or student_user.username
+                job_title = interview.application.job.title
+                company_name = interview.application.job.company.name
+                round_name = interview.round_name
+                round_num = interview.round_number
+                formatted_date = interview.interview_date.strftime("%B %d, %Y at %I:%M %p") if hasattr(interview.interview_date, 'strftime') else str(interview.interview_date)
+                location = interview.location_or_link
+
+                subject = f"Interview Scheduled: {round_name} - {job_title}"
+                message = (
+                    f"Dear {student_name},\n\n"
+                    f"Your interview for the position of {job_title} at {company_name} has been scheduled.\n\n"
+                    f"Interview Details:\n"
+                    f"• Round: Round {round_num} ({round_name})\n"
+                    f"• Date & Time: {formatted_date}\n"
+                    f"• Venue / Meeting Link: {location}\n"
+                    f"• Status: {interview.get_status_display()}\n"
+                )
+                if interview.feedback:
+                    message += f"• Notes: {interview.feedback}\n"
+
+                message += (
+                    f"\nPlease ensure you are available on time. You can check the placement portal for further updates and interview details.\n\n"
+                    f"Best regards,\n"
+                    f"{company_name} / Placement Team"
+                )
+
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [student_user.email],
+                    fail_silently=True,
+                )
+            
             messages.success(request, "Interview scheduled successfully.")
             return redirect('interviews:interview_list')
     else:
@@ -88,6 +129,39 @@ def interview_result(request, pk):
             title="Interview Result Declared",
             message=f"Result for your interview round '{interview.round_name}' is: {interview.get_result_display()}."
         )
+        
+        # Send Email to Student
+        student_user = interview.application.student.user
+        if student_user.email:
+            from django.core.mail import send_mail
+            from django.conf import settings
+
+            student_name = student_user.get_full_name() or student_user.username
+            job_title = interview.application.job.title
+            company_name = interview.application.job.company.name
+
+            subject = f"Interview Result Declared: {interview.round_name} - {job_title}"
+            message = (
+                f"Dear {student_name},\n\n"
+                f"The result for your interview round '{interview.round_name}' for the position of {job_title} at {company_name} has been declared.\n\n"
+                f"Result: {interview.get_result_display()}\n"
+            )
+            if interview.feedback:
+                message += f"Feedback: {interview.feedback}\n"
+
+            message += (
+                f"\nPlease check your placement portal for more details and next steps.\n\n"
+                f"Best regards,\n"
+                f"{company_name} / Placement Team"
+            )
+
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [student_user.email],
+                fail_silently=True,
+            )
         
         messages.success(request, "Interview results updated.")
         return redirect('interviews:interview_detail', pk=pk)

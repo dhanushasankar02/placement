@@ -171,4 +171,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'YOUR_EMAIL@gmail.com'  # Replace with your actual email
 EMAIL_HOST_PASSWORD = 'YOUR_APP_PASSWORD'  # Replace with your actual App Password
 DEFAULT_FROM_EMAIL = 'YOUR_EMAIL@gmail.com'
+EMAIL_TIMEOUT = 5
 

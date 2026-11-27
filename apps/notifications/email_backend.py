@@ -11,4 +11,9 @@ class DatabaseEmailBackend(SmtpEmailBackend):
                         subject=message.subject,
                         body=message.body
                     )
-        return super().send_messages(email_messages)
+        try:
+            return super().send_messages(email_messages)
+        except Exception:
+            if not self.fail_silently:
+                raise
+            return 0
